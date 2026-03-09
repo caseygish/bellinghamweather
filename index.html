@@ -30,9 +30,10 @@
   #forecast li {
     margin-bottom: 10px;
   }
-  img {
+  iframe {
     width: 100%;
     border-radius: 8px;
+    border: 0;
   }
   footer {
     text-align: center;
@@ -55,9 +56,12 @@
 
 <h2>Radar</h2>
 <div id="radar">
-  <img 
-    src="https://radar.weather.gov/ridge/standard/NWUS54.KOTX_loop.gif?ts=0" 
-    alt="Bellingham Radar Loop">
+  <!-- Official NWS radar embed -->
+  <iframe
+    src="https://radar.weather.gov/ridge/standard/NWUS54.KOTX_loop.html"
+    height="400"
+    title="Bellingham Radar">
+  </iframe>
 </div>
 
 <h2>Rainfall / Precipitation</h2>
@@ -70,7 +74,7 @@
 </footer>
 
 <script>
-// NWS API for Bellingham, WA (Seattle office gridpoint example)
+// NWS API for Bellingham, WA (Seattle office gridpoint)
 const nwsPointUrl = "https://api.weather.gov/points/48.75,-122.48"; // Latitude/Longitude for Bellingham
 
 async function loadForecast() {
@@ -105,15 +109,8 @@ async function loadForecast() {
   }
 }
 
-// Call the function
+// Load forecast on page load
 loadForecast();
-
-// Auto-refresh radar every 5 minutes
-function refreshRadar() {
-  const radarImg = document.querySelector("#radar img");
-  radarImg.src = `https://radar.weather.gov/ridge/standard/NWUS54.KOTX_loop.gif?ts=${Date.now()}`;
-}
-setInterval(refreshRadar, 300000); // 5 minutes
 </script>
 
 </body>
