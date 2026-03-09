@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bellingham Weather</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    max-width: 800px;
+    margin: auto;
+    padding: 20px;
+    background: #f0f4f8;
+    color: #222;
+  }
+  h1, h2 {
+    text-align: center;
+  }
+  #forecast, #radar, #rainfall {
+    margin: 20px 0;
+    padding: 15px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 5px rgba(0,0,0,0.1);
+  }
+  iframe {
+    width: 100%;
+    border: 0;
+    border-radius: 8px;
+  }
+  footer {
+    text-align: center;
+    font-size: 0.85em;
+    margin-top: 40px;
+    color: #555;
+  }
+</style>
+</head>
+<body>
+
+<h1>Bellingham Weather</h1>
+<p style="text-align:center;">Local weather information for Bellingham, Washington</p>
+
+<h2>Current Forecast</h2>
+<div id="forecast">Loading forecast...</div>
+
+<h2>Radar</h2>
+<div id="radar">
+  <iframe src="https://radar.weather.gov/Conus/Loop/NWUS52_NWUS54_NWUS54_loop.gif" height="400"></iframe>
+</div>
+
+<h2>Rainfall / Precipitation</h2>
+<div id="rainfall">
+  <p>Rainfall data coming soon.</p>
+</div>
+
+<footer>
+  &copy; 2026 BellinghamWeather.org | Data from <a href="https://www.weather.gov/" target="_blank">National Weather Service</a>
+</footer>
+
+<script>
+// NWS API for Bellingham, WA (Seattle office gridpoint example)
+const nwsPointUrl = "https://api.weather.gov/points/48.75,-122.48"; // Latitude/Longitude for Bellingham
+
+async function loadForecast() {
+  try {
+    const pointResp = await fetch(nwsPointUrl);
+    const pointData = await pointResp.json();
+    const forecastUrl = pointData.properties.forecast;
+    
+    const forecastResp = await fetch(forecastUrl);
+    const forecastData = await forecastResp.json();
+    
+    let forecastHTML = '';
+    forecastData.properties.periods.slice(0, 5).forEach(period => {
+      forecastHTML += `
+        <div style="margin-bottom:10px;">
+          <strong>${period.name}:</strong> ${period.detailedForecast}
+        </div>
+      `;
+    });
+    
+    document.getElementById("forecast").innerHTML = forecastHTML;
+  } catch (err) {
+    document.getElementById("forecast").innerHTML = "Forecast data unavailable.";
+    console.error(err);
+  }
+}
+
+// Call the function
+loadForecast();
+</script>
+
+</body>
+</html>
