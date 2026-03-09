@@ -23,9 +23,15 @@
     border-radius: 8px;
     box-shadow: 0 0 5px rgba(0,0,0,0.1);
   }
-  iframe {
+  #forecast ul {
+    list-style-type: none;
+    padding-left: 0;
+  }
+  #forecast li {
+    margin-bottom: 10px;
+  }
+  img {
     width: 100%;
-    border: 0;
     border-radius: 8px;
   }
   footer {
@@ -42,14 +48,16 @@
 <p style="text-align:center;">Local weather information for Bellingham, Washington</p>
 
 <h2>Current Forecast</h2>
-<div id="forecast">Loading forecast...</div>
+<div id="forecast">
+  <p>Loading forecast...</p>
+  <ul id="forecast-list"></ul>
+</div>
 
 <h2>Radar</h2>
 <div id="radar">
   <img 
-    src="https://radar.weather.gov/ridge/standard/NWUS54.KOTX_loop.gif" 
-    alt="Bellingham Radar Loop" 
-    style="width:100%; border-radius:8px;">
+    src="https://radar.weather.gov/ridge/standard/NWUS54.KOTX_loop.gif?ts=0" 
+    alt="Bellingham Radar Loop">
 </div>
 
 <h2>Rainfall / Precipitation</h2>
@@ -67,23 +75,30 @@ const nwsPointUrl = "https://api.weather.gov/points/48.75,-122.48"; // Latitude/
 
 async function loadForecast() {
   try {
-    const pointResp = await fetch(nwsPointUrl);
+    const headers = {
+      "User-Agent": "BellinghamWeather (your-email@example.com)",
+      "Accept": "application/geo+json"
+    };
+
+    const pointResp = await fetch(nwsPointUrl, { headers });
     const pointData = await pointResp.json();
     const forecastUrl = pointData.properties.forecast;
-    
-    const forecastResp = await fetch(forecastUrl);
+
+    const forecastResp = await fetch(forecastUrl, { headers });
     const forecastData = await forecastResp.json();
+
+    const forecastList = document.getElementById("forecast-list");
+    forecastList.innerHTML = '';
     
-    let forecastHTML = '';
     forecastData.properties.periods.slice(0, 5).forEach(period => {
-      forecastHTML += `
-        <div style="margin-bottom:10px;">
-          <strong>${period.name}:</strong> ${period.detailedForecast}
-        </div>
-      `;
+      const li = document.createElement("li");
+      li.innerHTML = `<strong>${period.name}:</strong> ${period.detailedForecast}`;
+      forecastList.appendChild(li);
     });
+
+    const lastUpdated = new Date().toLocaleString();
+    document.getElementById("forecast").insertAdjacentHTML('afterbegin', `<p>Last updated: ${lastUpdated}</p>`);
     
-    document.getElementById("forecast").innerHTML = forecastHTML;
   } catch (err) {
     document.getElementById("forecast").innerHTML = "Forecast data unavailable.";
     console.error(err);
@@ -92,6 +107,13 @@ async function loadForecast() {
 
 // Call the function
 loadForecast();
+
+// Auto-refresh radar every 5 minutes
+function refreshRadar() {
+  const radarImg = document.querySelector("#radar img");
+  radarImg.src = `https://radar.weather.gov/ridge/standard/NWUS54.KOTX_loop.gif?ts=${Date.now()}`;
+}
+setInterval(refreshRadar, 300000); // 5 minutes
 </script>
 
 </body>
