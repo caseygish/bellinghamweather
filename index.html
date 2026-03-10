@@ -30,7 +30,7 @@
     text-align: center;
   }
 
-  #moon, #forecast, #radar, #rainfall {
+  #moon, #forecast, #radar, #rainfall, #current-conditions {
     margin: 20px 0;
     padding: 15px;
     background: #fff;
@@ -68,24 +68,32 @@
 <h1>Bellingham Weather</h1>
 <p style="text-align:center;">Local weather information for Bellingham, Washington</p>
 
+<!-- Radar -->
+<h2>Radar</h2>
+<div id="radar">
+  <div style="position:relative; width:100%; padding-bottom:75%; overflow:hidden; border-radius:8px;">
+    <iframe
+      src="https://embed.windy.com/embed2.html?lat=48.75&lon=-122.48&zoom=7&level=surface&overlay=radar&menu=&message=true&marker=&calendar=now&pressure=&type=map&location=coordinates&detail=true&metricWind=default&metricTemp=default&radarRange=-1"
+      style="position:absolute; top:0; left:0; width:100%; height:100%; border:0;"
+      title="Bellingham Radar">
+    </iframe>
+  </div>
+</div>
+
+<!-- Current Conditions Tile -->
+<h2>Current Conditions</h2>
+<div id="current-conditions">
+  <p id="current-data">Loading current conditions...</p>
+</div>
+
+<!-- Forecast -->
 <h2>Current Forecast</h2>
 <div id="forecast">
   <p>Loading forecast...</p>
   <ul id="forecast-list"></ul>
 </div>
 
-<h2>Radar</h2>
-<div id="radar">
-  <!-- Responsive Windy radar embed -->
-  <div style="position:relative; width:100%; padding-bottom:89%; overflow:hidden; border-radius:8px;">
-    <iframe
-      src="https://embed.windy.com/embed2.html?lat=48.75&lon=-122.48&zoom=7&level=surface&overlay=radar&menu=&message=true&marker=&calendar=now&pressure=&type=map&location=coordinates&detail=true&metricWind=default&metricTemp=default&radarRange=-1"
-      style="position:absolute; top:0; left:0; width:100%; height:100%; border:0;"
-      title="BSubdued Radar">
-    </iframe>
-  </div>
-</div>
-
+<!-- Rainfall / Precipitation -->
 <h2>Rainfall / Precipitation</h2>
 <div id="rainfall">
   <p>Rainfall data coming soon.</p>
@@ -96,44 +104,6 @@
 </footer>
 
 <script>
-// NWS API for Bellingham, WA (Seattle office gridpoint)
-const nwsPointUrl = "https://api.weather.gov/points/48.75,-122.48";
-
-async function loadForecast() {
-  try {
-    const headers = {
-      "User-Agent": "BellinghamWeather (your-email@example.com)",
-      "Accept": "application/geo+json"
-    };
-
-    const pointResp = await fetch(nwsPointUrl, { headers });
-    const pointData = await pointResp.json();
-    const forecastUrl = pointData.properties.forecast;
-
-    const forecastResp = await fetch(forecastUrl, { headers });
-    const forecastData = await forecastResp.json();
-
-    const forecastList = document.getElementById("forecast-list");
-    forecastList.innerHTML = '';
-
-    forecastData.properties.periods.slice(0, 5).forEach(period => {
-      const li = document.createElement("li");
-      li.innerHTML = `<strong>${period.name}:</strong> ${period.detailedForecast}`;
-      forecastList.appendChild(li);
-    });
-
-    const lastUpdated = new Date().toLocaleString();
-    document.getElementById("forecast").insertAdjacentHTML('afterbegin', `<p>Last updated: ${lastUpdated}</p>`);
-
-  } catch (err) {
-    document.getElementById("forecast").innerHTML = "Forecast data unavailable.";
-    console.error(err);
-  }
-}
-
-// Load forecast on page load
-loadForecast();
-
 // -------------------
 // Moon Phase Script
 // -------------------
@@ -160,6 +130,55 @@ function getMoonPhase() {
 
 // Load moon phase on page load
 getMoonPhase();
+
+// -------------------
+// NWS Forecast + Current Conditions
+// -------------------
+const nwsPointUrl = "https://api.weather.gov/points/48.75,-122.48";
+
+async function loadForecastAndCurrent() {
+  try {
+    const headers = {
+      "User-Agent": "BellinghamWeather (your-email@example.com)",
+      "Accept": "application/geo+json"
+    };
+
+    // Get forecast URL
+    const pointResp = await fetch(nwsPointUrl, { headers });
+    const pointData = await pointResp.json();
+    const forecastUrl = pointData.properties.forecast;
+    const forecastResp = await fetch(forecastUrl, { headers });
+    const forecastData = await forecastResp.json();
+
+    // 1️⃣ Update 5-day forecast
+    const forecastList = document.getElementById("forecast-list");
+    forecastList.innerHTML = '';
+    forecastData.properties.periods.slice(0, 5).forEach(period => {
+      const li = document.createElement("li");
+      li.innerHTML = `<strong>${period.name}:</strong> ${period.detailedForecast}`;
+      forecastList.appendChild(li);
+    });
+    const lastUpdated = new Date().toLocaleString();
+    document.getElementById("forecast").insertAdjacentHTML('afterbegin', `<p>Last updated: ${lastUpdated}</p>`);
+
+    // 2️⃣ Update Current Conditions (from first forecast period)
+    const current = forecastData.properties.periods[0];
+    document.getElementById("current-data").innerHTML = `
+      <strong>${current.name}</strong><br>
+      Temperature: ${current.temperature}°${current.temperatureUnit}<br>
+      Wind: ${current.windSpeed} ${current.windDirection}<br>
+      Short forecast: ${current.shortForecast}
+    `;
+
+  } catch (err) {
+    document.getElementById("forecast").innerHTML = "Forecast data unavailable.";
+    document.getElementById("current-data").innerHTML = "Current conditions unavailable.";
+    console.error(err);
+  }
+}
+
+// Load data on page load
+loadForecastAndCurrent();
 </script>
 
 </body>
