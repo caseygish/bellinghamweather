@@ -30,7 +30,8 @@
     text-align: center;
   }
 
-  #moon, #forecast, #radar, #rainfall, #current-conditions {
+  /* Tiles styling */
+  .tile {
     margin: 20px 0;
     padding: 15px;
     background: #fff;
@@ -57,16 +58,7 @@
 <body>
 
 <!-- Banner -->
-<div id="banner">Your Source for a Subdued Forecast</div>
-
-<!-- Moon Phase at top -->
-<h2>Moon Phase</h2>
-<div id="moon">
-  <p id="moon-phase">Loading moon phase...</p>
-</div>
-
-<h1>Bellingham Weather</h1>
-<p style="text-align:center;">Local weather information for Bellingham, Washington</p>
+<div id="banner">Bellingham Weather</div>
 
 <!-- Radar -->
 <h2>Radar</h2>
@@ -82,21 +74,15 @@
 
 <!-- Current Conditions Tile -->
 <h2>Current Conditions</h2>
-<div id="current-conditions">
+<div id="current-conditions" class="tile">
   <p id="current-data">Loading current conditions...</p>
 </div>
 
-<!-- Forecast -->
-<h2>Current Forecast</h2>
-<div id="forecast">
+<!-- Forecast Tile -->
+<h2>5-Day Forecast</h2>
+<div id="forecast" class="tile">
   <p>Loading forecast...</p>
   <ul id="forecast-list"></ul>
-</div>
-
-<!-- Rainfall / Precipitation -->
-<h2>Rainfall / Precipitation</h2>
-<div id="rainfall">
-  <p>Rainfall data coming soon.</p>
 </div>
 
 <footer>
@@ -105,63 +91,25 @@
 
 <script>
 // -------------------
-// Moon Phase Script
-// -------------------
-function getMoonPhase() {
-  const now = new Date();
-  const lp = 2551443; // lunar period in seconds
-  const newMoon = new Date("2001-01-24T13:44:00"); // known new moon reference
-  const phase = ((now.getTime() - newMoon.getTime()) / 1000) % lp;
-  const phaseIndex = Math.floor((phase / lp) * 8);
-
-  const phases = [
-    "New Moon 🌑",
-    "Waxing Crescent 🌒",
-    "First Quarter 🌓",
-    "Waxing Gibbous 🌔",
-    "Full Moon 🌕",
-    "Waning Gibbous 🌖",
-    "Last Quarter 🌗",
-    "Waning Crescent 🌘"
-  ];
-
-  document.getElementById("moon-phase").textContent = phases[phaseIndex];
-}
-
-// Load moon phase on page load
-getMoonPhase();
-
-// -------------------
 // NWS Forecast + Current Conditions
 // -------------------
 const nwsPointUrl = "https://api.weather.gov/points/48.75,-122.48";
 
-async function loadForecastAndCurrent() {
+async function loadWeather() {
   try {
     const headers = {
       "User-Agent": "BellinghamWeather (your-email@example.com)",
       "Accept": "application/geo+json"
     };
 
-    // Get forecast URL
     const pointResp = await fetch(nwsPointUrl, { headers });
     const pointData = await pointResp.json();
     const forecastUrl = pointData.properties.forecast;
+
     const forecastResp = await fetch(forecastUrl, { headers });
     const forecastData = await forecastResp.json();
 
-    // 1️⃣ Update 5-day forecast
-    const forecastList = document.getElementById("forecast-list");
-    forecastList.innerHTML = '';
-    forecastData.properties.periods.slice(0, 5).forEach(period => {
-      const li = document.createElement("li");
-      li.innerHTML = `<strong>${period.name}:</strong> ${period.detailedForecast}`;
-      forecastList.appendChild(li);
-    });
-    const lastUpdated = new Date().toLocaleString();
-    document.getElementById("forecast").insertAdjacentHTML('afterbegin', `<p>Last updated: ${lastUpdated}</p>`);
-
-    // 2️⃣ Update Current Conditions (from first forecast period)
+    // --- Current Conditions ---
     const current = forecastData.properties.periods[0];
     document.getElementById("current-data").innerHTML = `
       <strong>${current.name}</strong><br>
@@ -170,15 +118,24 @@ async function loadForecastAndCurrent() {
       Short forecast: ${current.shortForecast}
     `;
 
+    // --- 5-Day Forecast ---
+    const forecastList = document.getElementById("forecast-list");
+    forecastList.innerHTML = '';
+    forecastData.properties.periods.slice(0, 5).forEach(period => {
+      const li = document.createElement("li");
+      li.innerHTML = `<strong>${period.name}:</strong> ${period.detailedForecast}`;
+      forecastList.appendChild(li);
+    });
+
   } catch (err) {
-    document.getElementById("forecast").innerHTML = "Forecast data unavailable.";
     document.getElementById("current-data").innerHTML = "Current conditions unavailable.";
+    document.getElementById("forecast").innerHTML = "Forecast data unavailable.";
     console.error(err);
   }
 }
 
-// Load data on page load
-loadForecastAndCurrent();
+// Load weather data on page load
+loadWeather();
 </script>
 
 </body>
