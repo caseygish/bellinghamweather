@@ -14,7 +14,6 @@
     color: #222;
   }
 
-  /* Banner at top */
   #banner {
     background-color: #0077cc;
     color: #fff;
@@ -30,4 +29,113 @@
     text-align: center;
   }
 
-  /* Tiles
+  .tile {
+    margin: 20px 0;
+    padding: 15px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 5px rgba(0,0,0,0.1);
+  }
+
+  #forecast ul {
+    list-style-type: none;
+    padding-left: 0;
+  }
+  #forecast li {
+    margin-bottom: 10px;
+  }
+
+  #radar img {
+    width: 100%;
+    border-radius: 8px;
+  }
+
+  footer {
+    text-align: center;
+    font-size: 0.85em;
+    margin-top: 40px;
+    color: #555;
+  }
+</style>
+</head>
+<body>
+
+<div id="banner">Bellingham Weather</div>
+
+<h1>Bellingham, WA</h1>
+
+<!-- Current Conditions -->
+<h2>Current Conditions</h2>
+<div id="current-conditions" class="tile">
+  <p id="current-data">Loading current conditions...</p>
+</div>
+
+<!-- Forecast Summary -->
+<h2>5-Day Forecast</h2>
+<div id="forecast" class="tile">
+  <p>Loading forecast...</p>
+  <ul id="forecast-list"></ul>
+</div>
+
+<!-- Radar -->
+<h2>Radar</h2>
+<div id="radar" class="tile">
+  <img src="https://radar.weather.gov/ridge/standard/BLI_0.gif" alt="Bellingham Radar">
+  <p style="text-align:center;font-size:0.85em;">Radar from National Weather Service (BLI)</p>
+</div>
+
+<footer>
+  &copy; 2026 BellinghamWeather.org | Data from <a href="https://www.weather.gov/" target="_blank">National Weather Service</a>
+</footer>
+
+<script>
+// -------------------
+// NWS Forecast + Current Conditions
+// -------------------
+const nwsPointUrl = "https://api.weather.gov/points/48.75,-122.48";
+
+async function loadWeather() {
+  try {
+    const headers = {
+      "User-Agent": "BellinghamWeather (your-email@example.com)",
+      "Accept": "application/geo+json"
+    };
+
+    const pointResp = await fetch(nwsPointUrl, { headers });
+    const pointData = await pointResp.json();
+    const forecastUrl = pointData.properties.forecast;
+
+    const forecastResp = await fetch(forecastUrl, { headers });
+    const forecastData = await forecastResp.json();
+
+    // Current Conditions
+    const current = forecastData.properties.periods[0];
+    document.getElementById("current-data").innerHTML = `
+      <strong>${current.name}</strong><br>
+      Temperature: ${current.temperature}°${current.temperatureUnit}<br>
+      Wind: ${current.windSpeed} ${current.windDirection}<br>
+      Short forecast: ${current.shortForecast}
+    `;
+
+    // 5-Day Forecast
+    const forecastList = document.getElementById("forecast-list");
+    forecastList.innerHTML = '';
+    forecastData.properties.periods.slice(0, 5).forEach(period => {
+      const li = document.createElement("li");
+      li.innerHTML = `<strong>${period.name}:</strong> ${period.detailedForecast}`;
+      forecastList.appendChild(li);
+    });
+
+  } catch (err) {
+    document.getElementById("current-data").innerHTML = "Current conditions unavailable.";
+    document.getElementById("forecast").innerHTML = "Forecast data unavailable.";
+    console.error(err);
+  }
+}
+
+// Load weather data on page load
+loadWeather();
+</script>
+
+</body>
+</html>
