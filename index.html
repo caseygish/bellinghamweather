@@ -9,62 +9,39 @@
 <link
   rel="stylesheet"
   href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-  integrity="sha256-sA+YD6Nf4P6BbbTVg6T4XDVh+V6RUUNV3A9rt5wq1j8="
   crossorigin=""
 />
 
 <style>
-  body {
-    font-family: Arial, sans-serif;
-    max-width: 900px;
-    margin: auto;
-    padding: 0 20px 20px 20px;
-    background: #f0f4f8;
-    color: #222;
-  }
-
-  #banner {
-    background-color: #0077cc;
-    color: white;
-    text-align: center;
-    padding: 15px 0;
-    font-size: 1.5em;
-    border-radius: 0 0 8px 8px;
-    margin-bottom: 20px;
-  }
-
-  h1, h2 {
-    text-align: center;
-  }
-
-  .tile {
-    margin: 20px 0;
-    padding: 15px;
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 0 5px rgba(0,0,0,0.1);
-  }
-
-  #radar-map {
-    height: 500px;
-    border-radius: 8px;
-  }
-
-  #forecast ul {
-    list-style-type: none;
-    padding-left: 0;
-  }
-
-  #forecast li {
-    margin-bottom: 10px;
-  }
-
-  footer {
-    text-align: center;
-    font-size: 0.85em;
-    margin-top: 40px;
-    color: #555;
-  }
+body {
+  font-family: Arial, sans-serif;
+  max-width: 900px;
+  margin: auto;
+  padding: 0 20px 20px 20px;
+  background: #f0f4f8;
+  color: #222;
+}
+#banner {
+  background-color: #0077cc;
+  color: white;
+  text-align: center;
+  padding: 15px 0;
+  font-size: 1.5em;
+  border-radius: 0 0 8px 8px;
+  margin-bottom: 20px;
+}
+h1,h2{text-align:center;}
+.tile {
+  margin:20px 0;
+  padding:15px;
+  background:white;
+  border-radius:8px;
+  box-shadow:0 0 5px rgba(0,0,0,0.1);
+}
+#radar-map {height:500px; border-radius:8px;}
+#forecast ul{list-style:none; padding-left:0;}
+#forecast li{margin-bottom:10px;}
+footer{text-align:center; font-size:0.85em; margin-top:40px; color:#555;}
 </style>
 </head>
 <body>
@@ -77,6 +54,8 @@
 <h2>Current Conditions</h2>
 <div id="current-conditions" class="tile">
   <p id="current-data">Loading current conditions...</p>
+  <h3>Next 2 Hours</h3>
+  <ul id="next-2-hours"></ul>
 </div>
 
 <!-- Forecast Summary -->
@@ -95,31 +74,26 @@
 </footer>
 
 <!-- Leaflet JS -->
-<script
-  src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-  integrity="sha256-oO/Yu8tuZJn0tiWUbQ6mM3hX3tgyIBB7eC0CPtWZcZU="
-  crossorigin=""
-></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
 
 <script>
-// 1. NWS Forecast + Current Conditions
+// -----------------
+// Load Current Conditions + 5-Day Forecast + Next 2 Hours
+// -----------------
 const nwsPointUrl = "https://api.weather.gov/points/48.75,-122.48";
 
 async function loadWeather() {
   try {
-    const headers = {
-      "User-Agent": "BellinghamWeather (your-email@example.com)",
-      "Accept": "application/geo+json"
-    };
-
-    const pointResp = await fetch(nwsPointUrl, { headers });
+    const headers = {"User-Agent":"BellinghamWeather (your-email@example.com)","Accept":"application/geo+json"};
+    const pointResp = await fetch(nwsPointUrl, {headers});
     const pointData = await pointResp.json();
-    const forecastUrl = pointData.properties.forecast;
 
-    const forecastResp = await fetch(forecastUrl, { headers });
+    // 5-Day Forecast
+    const forecastUrl = pointData.properties.forecast;
+    const forecastResp = await fetch(forecastUrl, {headers});
     const forecastData = await forecastResp.json();
 
-    // Current Conditions
+    // Current Conditions (first period)
     const current = forecastData.properties.periods[0];
     document.getElementById("current-data").innerHTML = `
       <strong>${current.name}</strong><br>
@@ -128,41 +102,56 @@ async function loadWeather() {
       Forecast: ${current.shortForecast}
     `;
 
-    // 5-Day Forecast
+    // 5-Day Forecast List
     const forecastList = document.getElementById("forecast-list");
     forecastList.innerHTML = '';
-    forecastData.properties.periods.slice(0, 5).forEach(p => {
+    forecastData.properties.periods.slice(0,5).forEach(p=>{
       const li = document.createElement("li");
       li.innerHTML = `<strong>${p.name}:</strong> ${p.detailedForecast}`;
       forecastList.appendChild(li);
     });
 
-  } catch (err) {
-    document.getElementById("current-data").textContent = "Current conditions unavailable.";
-    document.getElementById("forecast").textContent = "Forecast data unavailable.";
+    // -----------------
+    // Next 2 Hours Summary (Hourly API)
+    // -----------------
+    const hourlyUrl = pointData.properties.forecastHourly;
+    const hourlyResp = await fetch(hourlyUrl, {headers});
+    const hourlyData = await hourlyResp.json();
+
+    const next2hoursList = document.getElementById("next-2-hours");
+    next2hoursList.innerHTML = '';
+    // Get next 2 periods (~1 hour each)
+    hourlyData.properties.periods.slice(0,2).forEach(hour=>{
+      const li = document.createElement("li");
+      li.innerHTML = `<strong>${hour.name}:</strong> ${hour.temperature}°${hour.temperatureUnit}, ${hour.shortForecast}`;
+      next2hoursList.appendChild(li);
+    });
+
+  } catch(err){
+    document.getElementById("current-data").textContent="Current conditions unavailable.";
+    document.getElementById("forecast").textContent="Forecast data unavailable.";
+    document.getElementById("next-2-hours").innerHTML="<li>Hourly forecast unavailable.</li>";
     console.error(err);
   }
 }
 
 loadWeather();
 
-// 2. Add Interactive Radar with Leaflet
-const map = L.map('radar-map').setView([48.75, -122.48], 7);
+// -----------------
+// Leaflet Interactive Radar Map
+// -----------------
+const map = L.map('radar-map').setView([48.75,-122.48],7);
 
-// Base layer (OpenStreetMap)
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-  attribution: '&copy; OpenStreetMap contributors'
+// Base layer
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+  attribution:'&copy; OpenStreetMap contributors'
 }).addTo(map);
 
-// NWS Radar Overlay Layer
-const radarLayer = L.tileLayer(
-  'https://tilecache.rainviewer.com/v2/radar/{time}/{z}/{x}/{y}/2/1_1.png', {
-  time: Date.now() / 1000 | 0,
-  opacity: 0.6,
-  attribution: 'Radar &copy; RainViewer tiles'
+// NWS Radar overlay (BLI = Bellingham)
+L.tileLayer('https://radar.weather.gov/ridge/standard/BLI_0/{z}/{x}/{y}.png',{
+  attribution:'Radar &copy; National Weather Service'
 }).addTo(map);
 
-// (Optional) You can refresh `radarLayer` periodically by updating .options.time
 </script>
 
 </body>
