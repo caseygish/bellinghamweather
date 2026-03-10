@@ -29,13 +29,15 @@
   h1, h2 {
     text-align: center;
   }
-  #forecast, #radar, #rainfall {
+
+  #forecast, #radar, #rainfall, #moon {
     margin: 20px 0;
     padding: 15px;
     background: #fff;
     border-radius: 8px;
     box-shadow: 0 0 5px rgba(0,0,0,0.1);
   }
+
   #forecast ul {
     list-style-type: none;
     padding-left: 0;
@@ -43,6 +45,7 @@
   #forecast li {
     margin-bottom: 10px;
   }
+
   footer {
     text-align: center;
     font-size: 0.85em;
@@ -80,6 +83,11 @@
 <h2>Rainfall / Precipitation</h2>
 <div id="rainfall">
   <p>Rainfall data coming soon.</p>
+</div>
+
+<h2>Moon Phase</h2>
+<div id="moon">
+  <p id="moon-phase">Loading moon phase...</p>
 </div>
 
 <footer>
@@ -124,6 +132,33 @@ async function loadForecast() {
 
 // Load forecast on page load
 loadForecast();
+
+// -------------------
+// Moon Phase Script
+// -------------------
+function getMoonPhase() {
+  const now = new Date();
+  const lp = 2551443; // lunar period in seconds
+  const newMoon = new Date("2001-01-24T13:44:00"); // known new moon reference
+  const phase = ((now.getTime() - newMoon.getTime()) / 1000) % lp;
+  const phaseIndex = Math.floor((phase / lp) * 8);
+
+  const phases = [
+    "New Moon 🌑",
+    "Waxing Crescent 🌒",
+    "First Quarter 🌓",
+    "Waxing Gibbous 🌔",
+    "Full Moon 🌕",
+    "Waning Gibbous 🌖",
+    "Last Quarter 🌗",
+    "Waning Crescent 🌘"
+  ];
+
+  document.getElementById("moon-phase").textContent = phases[phaseIndex];
+}
+
+// Load moon phase on page load
+getMoonPhase();
 </script>
 
 </body>
