@@ -48,6 +48,11 @@ iframe {
   align-items: center;
 }
 
+.meteoblue-wrapper {
+  height: 420px;   /* visible area */
+  overflow: hidden;
+}
+
 #forecast-list {list-style:none; padding-left:0; text-align: left;}
 #forecast-list li{margin-bottom:10px;}
 footer{text-align:center; font-size:0.85em; margin-top:40px; padding-bottom: 20px; color:#555;}
@@ -71,22 +76,21 @@ footer{text-align:center; font-size:0.85em; margin-top:40px; padding-bottom: 20p
 <h2>7-Day Detailed Forecast</h2>
 
 <div class="tile">
-  <div class="meteoblue-container">
+  <div class="meteoblue-wrapper">
     <iframe
       src="https://www.meteoblue.com/en/weather/widget/daily/bellingham_united-states-of-america_5786899?geoloc=fixed&days=7&tempunit=F&windunit=mph"
       frameborder="0"
       scrolling="NO"
-      allowtransparency="true"
-      style="width: 100%; height: 460px; border: none;">
+      style="width: 100%; height: 520px; border: none;">
     </iframe>
-    
-    <div style="font-size:10px;">
-      Weather data by 
-      <a href="https://www.meteoblue.com/en/weather/week/bellingham_united-states-of-america_5786899"
-         target="_blank" rel="noopener">
-         meteoblue
-      </a>
-    </div>
+  </div>
+
+  <div style="font-size:10px;">
+    Weather data by
+    <a href="https://www.meteoblue.com/en/weather/week/bellingham_united-states-of-america_5786899"
+       target="_blank" rel="noopener">
+       meteoblue
+    </a>
   </div>
 </div>
 
