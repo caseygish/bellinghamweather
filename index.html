@@ -30,22 +30,27 @@ h1,h2{text-align:center;}
   background:white;
   border-radius:8px;
   box-shadow:0 0 5px rgba(0,0,0,0.1);
-  overflow: hidden; /* Keeps iframes rounded */
+  overflow: hidden;
+  text-align: center; /* Centers the Meteoblue widget */
 }
-/* Style for Windy Iframes */
+/* Style for Iframes */
 iframe {
   width: 100%;
   border: none;
   border-radius: 4px;
 }
 #radar-frame { height: 500px; }
-#forecast-frame { 
-  height: 520px;
+
+/* Meteoblue Specific Fix */
+.meteoblue-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-#forecast-list {list-style:none; padding-left:0;}
+#forecast-list {list-style:none; padding-left:0; text-align: left;}
 #forecast-list li{margin-bottom:10px;}
-footer{text-align:center; font-size:0.85em; margin-top:40px; color:#555;}
+footer{text-align:center; font-size:0.85em; margin-top:40px; padding-bottom: 20px; color:#555;}
 </style>
 </head>
 <body>
@@ -56,35 +61,35 @@ footer{text-align:center; font-size:0.85em; margin-top:40px; color:#555;}
 
 <!-- Current Conditions from NWS -->
 <h2>Current Conditions</h2>
-<div id="current-conditions" class="tile">
+<div id="current-conditions" class="tile" style="text-align: left;">
   <p id="current-data">Loading current conditions...</p>
   <h3>Two Hour Forecast</h3>
   <ul id="next-2-hours"></ul>
 </div>
 
 <!-- Meteoblue 7-Day Daily Forecast Tile -->
-<h2>Near Term Forecast Detail</h2>
+<h2>7-Day Detailed Forecast</h2>
 <div class="tile">
-<iframe 
-  src="https://www.meteoblue.com" 
-  frameborder="0" 
-  scrolling="NO" 
-  allowtransparency="true" 
-  sandbox="allow-same-origin allow-scripts allow-popups allow-popups-to-escape-sandbox" 
-  style="width: 378px; height: 460px">
-</iframe>
-<div>
-  <!-- Mandatory link for free use of Meteoblue widgets -->
-  <a href="https://www.meteoblue.com" target="_blank" rel="noopener">meteoblue</a>
-</div>
+  <div class="meteoblue-container">
+    <iframe 
+      src="https://www.meteoblue.com" 
+      frameborder="0" 
+      scrolling="NO" 
+      allowtransparency="true" 
+      sandbox="allow-same-origin allow-scripts allow-popups allow-popups-to-escape-sandbox" 
+      style="width: 378px; height: 460px;">
+    </iframe>
+    <div style="font-size: 10px;">
+      <a href="https://www.meteoblue.com" target="_blank" rel="noopener">meteoblue</a>
+    </div>
+  </div>
 </div>
 
-
-<!-- Windy Interactive Radar (New) -->
+<!-- Windy Interactive Radar -->
 <h2>Interactive Radar</h2>
 <div class="tile">
 <iframe id="radar-frame" 
-  src="https://embed.windy.com/embed2.html?lat=48.75&lon=-122.48&zoom=9&level=surface&overlay=radar&menu=&message=&marker=true&calendar=now&pressure=&type=map&location=coordinates&detail=&detailLat=48.75&detailLon=-122.48&metricWind=mph&metricTemp=%C"
+  src="https://embed.windy.com"
   style="width: 100%; height: 500px;" 
   title="Bellingham Local Radar">
 </iframe>
@@ -97,7 +102,7 @@ footer{text-align:center; font-size:0.85em; margin-top:40px; color:#555;}
 </div>
 
 <footer>
-  &copy; 2026 BellinghamWeather.org | Data from <a href="https://www.weather.gov/" target="_blank">NWS</a> & <a href="https://www.windy.com" target="_blank">Windy.com</a>
+  &copy; 2026 BellinghamWeather.org | Data from <a href="https://www.weather.gov/" target="_blank">NWS</a>, <a href="https://www.windy.com" target="_blank">Windy.com</a>, & <a href="https://www.meteoblue.com" target="_blank">Meteoblue</a>
 </footer>
 
 <script>
