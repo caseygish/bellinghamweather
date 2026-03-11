@@ -49,8 +49,14 @@ iframe {
 }
 
 .meteoblue-wrapper {
-  height: 400px;   /* visible area */
+  height: 380px;      /* visible window */
   overflow: hidden;
+  position: relative;
+}
+
+.meteoblue-wrapper iframe {
+  position: relative;
+  top: -40px;         /* moves iframe upward */
 }
 
 #forecast-list {list-style:none; padding-left:0; text-align: left;}
