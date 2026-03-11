@@ -69,18 +69,23 @@ footer{text-align:center; font-size:0.85em; margin-top:40px; padding-bottom: 20p
 
 <!-- Meteoblue 7-Day Daily Forecast Tile -->
 <h2>7-Day Detailed Forecast</h2>
+
 <div class="tile">
   <div class="meteoblue-container">
-    <iframe 
-      src="https://www.meteoblue.com" 
-      frameborder="0" 
-      scrolling="NO" 
-      allowtransparency="true" 
-      sandbox="allow-same-origin allow-scripts allow-popups allow-popups-to-escape-sandbox" 
-      style="width: 378px; height: 460px;">
+    <iframe
+      src="https://www.meteoblue.com/en/weather/widget/daily/bellingham_united-states-of-america_5786899?geoloc=fixed&days=7&tempunit=F&windunit=mph"
+      frameborder="0"
+      scrolling="NO"
+      allowtransparency="true"
+      style="width: 100%; height: 460px; border: none;">
     </iframe>
-    <div style="font-size: 10px;">
-      <a href="https://www.meteoblue.com" target="_blank" rel="noopener">meteoblue</a>
+    
+    <div style="font-size:10px;">
+      Weather data by 
+      <a href="https://www.meteoblue.com/en/weather/week/bellingham_united-states-of-america_5786899"
+         target="_blank" rel="noopener">
+         meteoblue
+      </a>
     </div>
   </div>
 </div>
@@ -88,9 +93,9 @@ footer{text-align:center; font-size:0.85em; margin-top:40px; padding-bottom: 20p
 <!-- Windy Interactive Radar -->
 <h2>Interactive Radar</h2>
 <div class="tile">
-<iframe id="radar-frame" 
-  src="https://embed.windy.com"
-  style="width: 100%; height: 500px;" 
+<iframe
+  src="https://embed.windy.com/embed2.html?lat=48.75&lon=-122.48&zoom=9&level=surface&overlay=radar&menu=&message=true&marker=true&calendar=now&pressure=&type=map&location=coordinates&detail=&detailLat=48.75&detailLon=-122.48&metricWind=mph&metricTemp=%C2%B0F"
+  style="width: 100%; height: 500px; border: none;"
   title="Bellingham Local Radar">
 </iframe>
 </div>
