@@ -31,9 +31,9 @@ h1,h2{text-align:center;}
   border-radius:8px;
   box-shadow:0 0 5px rgba(0,0,0,0.1);
   overflow: hidden;
-  text-align: center; /* Centers the Meteoblue widget */
+  text-align: center;
 }
-/* Style for Iframes */
+/* Standardizes Iframe containers */
 iframe {
   width: 100%;
   border: none;
@@ -41,11 +41,13 @@ iframe {
 }
 #radar-frame { height: 500px; }
 
-/* Meteoblue Specific Fix */
-.meteoblue-container {
+/* Centers the Meteoblue widget specifically */
+.meteoblue-wrapper {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
+  min-height: 460px;
 }
 
 #forecast-list {list-style:none; padding-left:0; text-align: left;}
@@ -67,20 +69,20 @@ footer{text-align:center; font-size:0.85em; margin-top:40px; padding-bottom: 20p
   <ul id="next-2-hours"></ul>
 </div>
 
-<!-- Meteoblue 7-Day Daily Forecast Tile -->
+<!-- FIXED: Meteoblue 7-Day Daily Forecast Tile -->
 <h2>7-Day Detailed Forecast</h2>
 <div class="tile">
-  <div class="meteoblue-container">
+  <div class="meteoblue-wrapper">
+    <!-- The sandbox attribute was removed to allow script execution required by the widget -->
     <iframe 
       src="https://www.meteoblue.com" 
       frameborder="0" 
       scrolling="NO" 
       allowtransparency="true" 
-      sandbox="allow-same-origin allow-scripts allow-popups allow-popups-to-escape-sandbox" 
       style="width: 378px; height: 460px;">
     </iframe>
-    <div style="font-size: 10px;">
-      <a href="https://www.meteoblue.com" target="_blank" rel="noopener">meteoblue</a>
+    <div style="font-size: 10px; margin-top: 5px;">
+      <a href="https://www.meteoblue.com/en/weather/week/bellingham_united-states_5786899" target="_blank" rel="noopener">meteoblue</a>
     </div>
   </div>
 </div>
@@ -106,7 +108,7 @@ footer{text-align:center; font-size:0.85em; margin-top:40px; padding-bottom: 20p
 </footer>
 
 <script>
-const nwsPointUrl = "https://api.weather.gov/points/48.75,-122.48";
+const nwsPointUrl = "https://api.weather.gov";
 
 async function loadWeather() {
   try {
@@ -114,7 +116,6 @@ async function loadWeather() {
     const pointResp = await fetch(nwsPointUrl, {headers});
     const pointData = await pointResp.json();
 
-    // 5-Day Forecast
     const forecastUrl = pointData.properties.forecast;
     const forecastResp = await fetch(forecastUrl, {headers});
     const forecastData = await forecastResp.json();
@@ -135,7 +136,6 @@ async function loadWeather() {
       forecastList.appendChild(li);
     });
 
-    // Hourly
     const hourlyUrl = pointData.properties.forecastHourly;
     const hourlyResp = await fetch(hourlyUrl, {headers});
     const hourlyData = await hourlyResp.json();
