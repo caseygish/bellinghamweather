@@ -4,8 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Bellingham Weather</title>
-  
+
+<!-- =========================
+        STYLE SECTION
+========================= -->
 <style>
+
 body {
   font-family: Arial, sans-serif;
   max-width: 1000px;
@@ -14,6 +18,18 @@ body {
   background: #f0f4f8;
   color: #222;
 }
+
+/* Sloth image at top */
+#sloth {
+  text-align: center;
+  margin-top: 10px;
+}
+
+#sloth img {
+  width: 120px;
+}
+
+/* Banner */
 #banner {
   background-color: #0077cc;
   color: white;
@@ -21,8 +37,94 @@ body {
   padding: 15px 0;
   font-size: 1.5em;
   border-radius: 0 0 8px 8px;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
+
+/* Weather bar */
+#weather-bar{
+  background:#1c1c1c;
+  color:white;
+  padding:10px;
+  font-size:16px;
+  text-align:center;
+  border-bottom:2px solid #444;
+  font-family:Arial, sans-serif;
+}
+
+h1,h2{
+  text-align:center;
+}
+
+/* Content tiles */
+.tile {
+  margin:20px 0;
+  padding:15px;
+  background:white;
+  border-radius:8px;
+  box-shadow:0 0 5px rgba(0,0,0,0.1);
+  overflow: hidden;
+  text-align: center;
+}
+
+/* Iframe styling */
+iframe {
+  width: 100%;
+  border: none;
+  border-radius: 4px;
+}
+
+#radar-frame {
+  height: 500px;
+}
+
+/* Meteoblue widget crop */
+.meteoblue-wrapper {
+  height: 325px;
+  overflow: hidden;
+  position: relative;
+}
+
+.meteoblue-wrapper iframe {
+  position: relative;
+  top: -40px;
+}
+
+#forecast-list {
+  list-style:none;
+  padding-left:0;
+  text-align:left;
+}
+
+#forecast-list li{
+  margin-bottom:10px;
+}
+
+footer{
+  text-align:center;
+  font-size:0.85em;
+  margin-top:40px;
+  padding-bottom:20px;
+  color:#555;
+}
+
+</style>
+</head>
+
+
+<!-- =========================
+         BODY SECTION
+========================= -->
+<body>
+
+<!-- Sloth Image -->
+<div id="sloth">
+  <img src="sloth.png" alt="Cute Cartoon Sloth">
+</div>
+
+<!-- Banner -->
+<div id="banner">Your Source for a Subdued Forecast</div>
+
+<!-- Ambient Weather Current Conditions -->
 <div id="weather-bar">
   <strong>Current Conditions in the Sunnyland Neighborhood</strong> |
   Temp: <span id="temp">--</span>°F |
@@ -32,81 +134,26 @@ body {
   Pressure: <span id="pressure">--</span> inHg |
   Rain Today: <span id="rain">--</span> in
 </div>
-  
-  #weather-bar{
-  background:#1c1c1c;
-  color:white;
-  padding:10px;
-  font-size:16px;
-  text-align:center;
-  border-bottom:2px solid #444;
-  font-family:Arial, sans-serif;
-}
-h1,h2{text-align:center;}
-.tile {
-  margin:20px 0;
-  padding:15px;
-  background:white;
-  border-radius:8px;
-  box-shadow:0 0 5px rgba(0,0,0,0.1);
-  overflow: hidden;
-  text-align: center; /* Centers the Meteoblue widget */
-}  
-  /* Style for Iframes */
-iframe {
-  width: 100%;
-  border: none;
-  border-radius: 4px;
-}
-#radar-frame { height: 500px; }
-
-/* Meteoblue Specific Fix */
-.meteoblue-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.meteoblue-wrapper {
-  height: 325px;      /* visible window adjust to adjust what is seen*/
-  overflow: hidden;
-  position: relative;
-}
-
-.meteoblue-wrapper iframe {
-  position: relative;
-  top: -40px;         /* moves iframe upward */
-}
-
-#forecast-list {list-style:none; padding-left:0; text-align: left;}
-#forecast-list li{margin-bottom:10px;}
-footer{text-align:center; font-size:0.85em; margin-top:40px; padding-bottom: 20px; color:#555;}
-</style>
-</head>
-<body>
-
-<div id="banner">Your Source for a Subdued Forecast</div>
 
 <h1>Bellingham, WA</h1>
 
 <!-- Current Conditions from NWS -->
 <h2>Current Conditions</h2>
-<div id="current-conditions" class="tile" style="text-align: left;">
+<div id="current-conditions" class="tile" style="text-align:left;">
   <p id="current-data">Loading current conditions...</p>
   <h3>Two Hour Forecast</h3>
   <ul id="next-2-hours"></ul>
 </div>
 
-<!-- Meteoblue 7-Day Daily Forecast Tile -->
+<!-- Meteoblue Forecast -->
 <h2>7-Day Detailed Forecast</h2>
-
 <div class="tile">
+
   <div class="meteoblue-wrapper">
     <iframe
       src="https://www.meteoblue.com/en/weather/widget/daily/bellingham_united-states-of-america_5786899?geoloc=fixed&days=7&tempunit=F&windunit=mph"
-      frameborder="0"
-      scrolling="NO"
-      style="width: 100%; height: 520px; border: none;">
+      scrolling="no"
+      style="width:100%; height:520px;">
     </iframe>
   </div>
 
@@ -117,28 +164,36 @@ footer{text-align:center; font-size:0.85em; margin-top:40px; padding-bottom: 20p
        meteoblue
     </a>
   </div>
+
 </div>
 
-<!-- Windy Interactive Radar -->
+<!-- Radar -->
 <h2>Interactive Radar</h2>
 <div class="tile">
 <iframe
-  src="https://embed.windy.com/embed2.html?lat=48.75&lon=-122.48&zoom=9&level=surface&overlay=radar&menu=&message=true&marker=true&calendar=now&pressure=&type=map&location=coordinates&detail=&detailLat=48.75&detailLon=-122.48&metricWind=mph&metricTemp=%C2%B0F"
-  style="width: 100%; height: 500px; border: none;"
+  src="https://embed.windy.com/embed2.html?lat=48.75&lon=-122.48&zoom=9&level=surface&overlay=radar&menu=&message=true&marker=true&calendar=now&location=coordinates&metricWind=mph&metricTemp=%C2%B0F"
+  style="width:100%; height:500px;"
   title="Bellingham Local Radar">
 </iframe>
 </div>
 
-<!-- NWS Text Forecast -->
+<!-- NWS Forecast -->
 <h2>Detailed Text Forecast</h2>
 <div id="forecast" class="tile">
   <ul id="forecast-list"></ul>
 </div>
 
 <footer>
-  &copy; 2026 BellinghamWeather.org | Data from <a href="https://www.weather.gov/" target="_blank">NWS</a>, <a href="https://www.windy.com" target="_blank">Windy.com</a>, & <a href="https://www.meteoblue.com" target="_blank">Meteoblue</a>
+  &copy; 2026 BellinghamWeather.org |
+  Data from
+  <a href="https://www.weather.gov/" target="_blank">NWS</a>,
+  <a href="https://www.windy.com" target="_blank">Windy.com</a>,
+  &
+  <a href="https://www.meteoblue.com" target="_blank">Meteoblue</a>
 </footer>
 
+</body>
+</html>
 <script>
 
 /* ---------------- AMBIENT WEATHER ---------------- */
