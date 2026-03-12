@@ -24,7 +24,7 @@ body {
   margin-bottom: 20px;
 }
 <div id="weather-bar">
-  <strong>Sunnyland Neighborhood Weather Station</strong> |
+  <strong>Current Conditions in the Sunnyland Neighborhood</strong> |
   Temp: <span id="temp">--</span>°F |
   Humidity: <span id="humidity">--</span>% |
   Wind: <span id="wind">--</span> mph |
@@ -32,6 +32,7 @@ body {
   Pressure: <span id="pressure">--</span> inHg |
   Rain Today: <span id="rain">--</span> in
 </div>
+  
   #weather-bar{
   background:#1c1c1c;
   color:white;
@@ -140,18 +141,18 @@ footer{text-align:center; font-size:0.85em; margin-top:40px; padding-bottom: 20p
 
 <script>
 
-  <script>
+/* ---------------- AMBIENT WEATHER ---------------- */
 
 const apiKey = "fa63f964f5d7427c9af09b517298aeb867f1cc01056d4d82aedf75e921f0edc5";
 const appKey = "be1ca75941af495a8e61136955d10fd58870cd3990a44af08cdaab253f387a2b";
 
-const url = `https://api.ambientweather.net/v1/devices?applicationKey=${appKey}&apiKey=${apiKey}`;
+const ambientUrl = `https://api.ambientweather.net/v1/devices?applicationKey=${appKey}&apiKey=${apiKey}`;
 
-async function loadWeather() {
+async function loadAmbientWeather(){
 
   try{
 
-    const response = await fetch(url);
+    const response = await fetch(ambientUrl);
     const data = await response.json();
 
     const station = data[0].lastData;
@@ -166,31 +167,36 @@ async function loadWeather() {
   }
 
   catch(error){
-    console.log("Weather data error", error);
+    console.log("Ambient Weather error", error);
   }
 
 }
 
-loadWeather();
+loadAmbientWeather();
+setInterval(loadAmbientWeather, 60000);
 
-/* refresh every 60 seconds */
-setInterval(loadWeather, 60000);
 
-</script>
+/* ---------------- NWS FORECAST ---------------- */
+
 const nwsPointUrl = "https://api.weather.gov/points/48.75,-122.48";
 
-async function loadWeather() {
-  try {
-    const headers = {"User-Agent":"BellinghamWeather (your-email@example.com)","Accept":"application/geo+json"};
+async function loadNWSWeather(){
+
+  try{
+
+    const headers = {
+      "User-Agent":"BellinghamWeather (your-email@example.com)",
+      "Accept":"application/geo+json"
+    };
+
     const pointResp = await fetch(nwsPointUrl, {headers});
     const pointData = await pointResp.json();
 
-    // 5-Day Forecast
-    const forecastUrl = pointData.properties.forecast;
-    const forecastResp = await fetch(forecastUrl, {headers});
+    const forecastResp = await fetch(pointData.properties.forecast, {headers});
     const forecastData = await forecastResp.json();
 
     const current = forecastData.properties.periods[0];
+
     document.getElementById("current-data").innerHTML = `
       <strong>${current.name}</strong><br>
       Temperature: ${current.temperature}°${current.temperatureUnit}<br>
@@ -200,31 +206,35 @@ async function loadWeather() {
 
     const forecastList = document.getElementById("forecast-list");
     forecastList.innerHTML = '';
+
     forecastData.properties.periods.slice(0,5).forEach(p=>{
       const li = document.createElement("li");
       li.innerHTML = `<strong>${p.name}:</strong> ${p.detailedForecast}`;
       forecastList.appendChild(li);
     });
 
-    // Hourly
-    const hourlyUrl = pointData.properties.forecastHourly;
-    const hourlyResp = await fetch(hourlyUrl, {headers});
+    const hourlyResp = await fetch(pointData.properties.forecastHourly, {headers});
     const hourlyData = await hourlyResp.json();
 
     const next2hoursList = document.getElementById("next-2-hours");
     next2hoursList.innerHTML = '';
+
     hourlyData.properties.periods.slice(0,2).forEach(hour=>{
       const li = document.createElement("li");
       li.innerHTML = `<strong>${hour.name}:</strong> ${hour.temperature}°${hour.temperatureUnit}, ${hour.shortForecast}`;
       next2hoursList.appendChild(li);
     });
 
-  } catch(err){
+  }
+
+  catch(err){
     console.error(err);
   }
+
 }
 
-loadWeather();
+loadNWSWeather();
+
 </script>
 
 </body>
