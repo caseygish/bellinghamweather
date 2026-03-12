@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Bellingham Weather</title>
-
+  
 <style>
 body {
   font-family: Arial, sans-serif;
@@ -23,6 +23,24 @@ body {
   border-radius: 0 0 8px 8px;
   margin-bottom: 20px;
 }
+<div id="weather-bar">
+  <strong>Sunnyland Neighborhood Weather Station</strong> |
+  Temp: <span id="temp">--</span>°F |
+  Humidity: <span id="humidity">--</span>% |
+  Wind: <span id="wind">--</span> mph |
+  Gust: <span id="gust">--</span> mph |
+  Pressure: <span id="pressure">--</span> inHg |
+  Rain Today: <span id="rain">--</span> in
+</div>
+  #weather-bar{
+  background:#1c1c1c;
+  color:white;
+  padding:10px;
+  font-size:16px;
+  text-align:center;
+  border-bottom:2px solid #444;
+  font-family:Arial, sans-serif;
+}
 h1,h2{text-align:center;}
 .tile {
   margin:20px 0;
@@ -32,8 +50,8 @@ h1,h2{text-align:center;}
   box-shadow:0 0 5px rgba(0,0,0,0.1);
   overflow: hidden;
   text-align: center; /* Centers the Meteoblue widget */
-}
-/* Style for Iframes */
+}  
+  /* Style for Iframes */
 iframe {
   width: 100%;
   border: none;
@@ -121,6 +139,44 @@ footer{text-align:center; font-size:0.85em; margin-top:40px; padding-bottom: 20p
 </footer>
 
 <script>
+
+  <script>
+
+const apiKey = "fa63f964f5d7427c9af09b517298aeb867f1cc01056d4d82aedf75e921f0edc5";
+const appKey = "be1ca75941af495a8e61136955d10fd58870cd3990a44af08cdaab253f387a2b";
+
+const url = `https://api.ambientweather.net/v1/devices?applicationKey=${appKey}&apiKey=${apiKey}`;
+
+async function loadWeather() {
+
+  try{
+
+    const response = await fetch(url);
+    const data = await response.json();
+
+    const station = data[0].lastData;
+
+    document.getElementById("temp").textContent = station.tempf.toFixed(1);
+    document.getElementById("humidity").textContent = station.humidity;
+    document.getElementById("wind").textContent = station.windspeedmph.toFixed(1);
+    document.getElementById("gust").textContent = station.windgustmph.toFixed(1);
+    document.getElementById("pressure").textContent = station.baromrelin.toFixed(2);
+    document.getElementById("rain").textContent = station.dailyrainin.toFixed(2);
+
+  }
+
+  catch(error){
+    console.log("Weather data error", error);
+  }
+
+}
+
+loadWeather();
+
+/* refresh every 60 seconds */
+setInterval(loadWeather, 60000);
+
+</script>
 const nwsPointUrl = "https://api.weather.gov/points/48.75,-122.48";
 
 async function loadWeather() {
