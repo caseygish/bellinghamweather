@@ -1,0 +1,194 @@
+/* Weather Banner Styles */
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+
+.weather-banner {
+    width: 100%;
+    background: linear-gradient(to right, #38bdf8, #60a5fa, #22d3ee);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Decorative clouds */
+.cloud {
+    position: absolute;
+    opacity: 0.2;
+}
+
+.cloud-1 {
+    top: 1rem;
+    left: 2.5rem;
+}
+
+.cloud-2 {
+    top: 2rem;
+    right: 5rem;
+}
+
+.cloud-3 {
+    bottom: 1.5rem;
+    left: 25%;
+}
+
+.cloud-icon {
+    width: 64px;
+    height: 64px;
+    color: white;
+}
+
+.cloud-2 .cloud-icon {
+    width: 80px;
+    height: 80px;
+}
+
+.cloud-3 .cloud-icon {
+    width: 48px;
+    height: 48px;
+}
+
+/* Main content */
+.banner-content {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 3rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+}
+
+@media (min-width: 768px) {
+    .banner-content {
+        flex-direction: row;
+        padding: 4rem 1.5rem;
+    }
+}
+
+/* Text content */
+.text-content {
+    flex: 1;
+    color: white;
+    z-index: 10;
+}
+
+.title-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+}
+
+.sun-icon {
+    width: 40px;
+    height: 40px;
+    color: #fde047;
+    flex-shrink: 0;
+}
+
+.banner-title {
+    font-size: 2.25rem;
+    font-weight: bold;
+    margin: 0;
+}
+
+@media (min-width: 768px) {
+    .banner-title {
+        font-size: 3rem;
+    }
+}
+
+.banner-subtitle {
+    font-size: 1.125rem;
+    color: #dbeafe;
+    margin: 0 0 1rem 0;
+}
+
+@media (min-width: 768px) {
+    .banner-subtitle {
+        font-size: 1.25rem;
+    }
+}
+
+.badges-container {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.badge {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(8px);
+    padding: 0.5rem 1rem;
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.badge-icon {
+    width: 20px;
+    height: 20px;
+}
+
+/* Image container */
+.image-container {
+    flex-shrink: 0;
+    position: relative;
+}
+
+.image-glow {
+    position: absolute;
+    inset: 0;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    filter: blur(40px);
+    transform: scale(1.1);
+}
+
+.sloth-image {
+    width: 256px;
+    height: 256px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 8px solid rgba(255, 255, 255, 0.5);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    position: relative;
+    z-index: 10;
+}
+
+@media (min-width: 768px) {
+    .sloth-image {
+        width: 320px;
+        height: 320px;
+    }
+}
+
+/* Wave decoration */
+.wave-decoration {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.wave-decoration svg {
+    width: 100%;
+    height: 48px;
+}
+
+@media (min-width: 768px) {
+    .wave-decoration svg {
+        height: 64px;
+    }
+}
