@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bellingham Weather Banner</title>
+    <link rel="stylesheet" href="weather-banner.css">
+</head>
+<body>
+    <div class="weather-banner">
+        <!-- Decorative clouds -->
+        <div class="cloud cloud-1">
+            <svg class="cloud-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/>
+            </svg>
+        </div>
+        <div class="cloud cloud-2">
+            <svg class="cloud-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/>
+            </svg>
+        </div>
+        <div class="cloud cloud-3">
+            <svg class="cloud-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/>
+            </svg>
+        </div>
+
+        <!-- Main content container -->
+        <div class="banner-content">
+            <!-- Text content -->
+            <div class="text-content">
+                <div class="title-row">
+                    <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="4"/>
+                        <path d="M12 2v2"/>
+                        <path d="M12 20v2"/>
+                        <path d="m4.93 4.93 1.41 1.41"/>
+                        <path d="m17.66 17.66 1.41 1.41"/>
+                        <path d="M2 12h2"/>
+                        <path d="M20 12h2"/>
+                        <path d="m6.34 17.66-1.41 1.41"/>
+                        <path d="m19.07 4.93-1.41 1.41"/>
+                    </svg>
+                    <h1 class="banner-title">Bellingham Weather</h1>
+                </div>
+                <p class="banner-subtitle">Your source for a subdued forecast</p>
+                <div class="badges-container">
+                    <div class="badge">
+                        <svg class="badge-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="4"/>
+                            <path d="M12 2v2"/>
+                            <path d="M12 20v2"/>
+                            <path d="m4.93 4.93 1.41 1.41"/>
+                            <path d="m17.66 17.66 1.41 1.41"/>
+                            <path d="M2 12h2"/>
+                            <path d="M20 12h2"/>
+                            <path d="m6.34 17.66-1.41 1.41"/>
+                            <path d="m19.07 4.93-1.41 1.41"/>
+                        </svg>
+                        <span>Always Chill</span>
+                    </div>
+                    <div class="badge">
+                        <svg class="badge-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"/>
+                            <path d="M16 14v6"/>
+                            <path d="M8 14v6"/>
+                            <path d="M12 16v6"/>
+                        </svg>
+                        <span>Rain or Shine</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sloth image -->
+            <div class="image-container">
+                <div class="image-glow"></div>
+                <img 
+                    src="https://images.unsplash.com/photo-1603655247166-ed1d65cbb1b6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjdXRlJTIwc2xvdGglMjBzbWlsaW5nfGVufDF8fHx8MTc3MzcyNDY0MXww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
+                    alt="Cute sloth mascot"
+                    class="sloth-image"
+                    onerror="this.src='https://via.placeholder.com/320x320/38bdf8/ffffff?text=Weather+Sloth'"
+                >
+            </div>
+        </div>
+
+        <!-- Bottom wave decoration -->
+        <div class="wave-decoration">
+            <svg viewBox="0 0 1200 120" preserveAspectRatio="none">
+                <path d="M0,0 C150,80 350,80 600,60 C850,40 1050,40 1200,60 L1200,120 L0,120 Z" fill="rgba(255,255,255,0.1)"/>
+            </svg>
+        </div>
+    </div>
+</body>
+</html>
