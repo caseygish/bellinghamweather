@@ -182,6 +182,28 @@
     footer a { color: #3a6a90; text-decoration: none; }
     footer a:hover { color: #7ab8f5; }
 
+    /* Closure banner */
+    .closure-banner {
+      background: #1a0d00;
+      border-bottom: 1px solid rgba(255,140,0,0.3);
+      padding: 0.75rem 1.75rem;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .closure-banner i { font-size: 20px; color: #f0900a; flex-shrink: 0; }
+    .closure-banner-text { flex: 1; }
+    .closure-banner-title {
+      font-size: 14px;
+      font-weight: 500;
+      color: #f5a83a;
+      margin-bottom: 2px;
+    }
+    .closure-banner-sub {
+      font-size: 12px;
+      color: #8a6030;
+    }
+
     /* Loading / error */
     .loading {
       text-align: center;
@@ -195,6 +217,13 @@
 </head>
 <body>
 <div id="app">
+  <div class="closure-banner" id="closureBanner" style="display:none">
+    <i class="ti ti-alert-triangle" aria-hidden="true"></i>
+    <div class="closure-banner-text">
+      <div class="closure-banner-title">Mount Baker Ski Area is closed for the season</div>
+      <div class="closure-banner-sub">The ski area typically opens in November and closes in May. Weather data below reflects current mountain conditions.</div>
+    </div>
+  </div>
   <div class="hero">
     <div class="snowflake-bg" id="sfBg"></div>
     <svg class="mountain-svg" viewBox="0 0 800 120" preserveAspectRatio="none" aria-hidden="true">
@@ -388,6 +417,13 @@ function spawnSnowflakes() {
   }
 }
 
+function checkSeasonalClosure() {
+  const month = new Date().getMonth() + 1; // 1=Jan, 12=Dec
+  const isClosed = month >= 5 && month <= 10; // Closed May–October
+  document.getElementById('closureBanner').style.display = isClosed ? 'flex' : 'none';
+}
+
+checkSeasonalClosure();
 loadWeather();
 setInterval(loadWeather, 10 * 60 * 1000);
 </script>
